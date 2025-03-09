@@ -1,0 +1,63 @@
+date
+Sun Mar  9 14:27:56 UTC 2025
+
+mkdir /tmp/missing
+
+ls -l /tmp
+total 8
+drwx------  3 user user 4096 Mar  9 14:26 snap
+drwxr-xr-x  2 user user 4096 Mar  9 14:27 missing
+
+touch /tmp/missing/semester
+
+ls -l /tmp/missing
+total 0
+-rw-r--r-- 1 user user 0 Mar  9 14:27 semester
+
+echo '#!/bin/sh' > /tmp/missing/semester
+echo 'curl --head --silent https://missing.csail.mit.edu' >> /tmp/missing/semester
+
+cat /tmp/missing/semester
+#!/bin/sh
+curl --head --silent https://missing.csail.mit.edu
+
+./semester
+bash: ./semester: Permission denied
+
+sh semester
+HTTP/1.1 200 OK
+Date: Sun, 09 Mar 2025 14:27:58 GMT
+Last-Modified: Thu, 16 Jan 2020 10:23:34 GMT
+Connection: close
+Content-Type: text/html
+...
+
+chmod +x /tmp/missing/semester
+
+./semester
+HTTP/1.1 200 OK
+Date: Sun, 09 Mar 2025 14:27:59 GMT
+Last-Modified: Thu, 16 Jan 2020 10:23:34 GMT
+Connection: close
+Content-Type: text/html
+...
+
+./semester | grep -i "Last-Modified" > ~/last-modified.txt
+
+cat ~/last-modified.txt
+Last-Modified: Thu, 16 Jan 2020 10:23:34 GMT
+
+ls -l /sys/class/power_supply/BAT0/capacity
+-r--r--r-- 1 root root 4096 Mar  9 14:27 /sys/class/power_supply/BAT0/capacity
+
+cat /sys/class/power_supply/BAT0/capacity
+72
+
+ls -l | tee output.txt
+total 24
+-rw-r--r--  1 user user   178 Mar  9 14:28 output.txt
+drwx------  3 user user  4096 Mar  9 14:26 snap
+drwxr-xr-x  2 user user  4096 Mar  9 14:27 missing
+-rw-r--r--  1 user user     0 Mar  9 14:27 semester
+-rwxr-xr-x  1 user user    36 Mar  9 14:27 semester
+-rw-r--r--  1 user user    30 Mar  9 14:28 last-modified.txt
